@@ -1,0 +1,73 @@
+<misterromdescription>
+    <!-- *** REQUIRES THE coh700b BOOT-SIGNATURE MECHANISM (core build 2026-08-01 or later): this is a MAME coh700b machine, whose boot ROM spins forever unless main RAM 0x80010000 holds the 12 signature bytes 4E 61 6D 63 6F 20 4C 74 64 2E 2D 2D (ASCII "Namco Ltd." followed by two dashes) taken from program ROM +0x20280, as MAME namcos12_state::driver_reset does when m_boot_hack is set. Platform byte 0xA4 (bit7 set) tells the core to copy those 12 bytes into RAM after every reset. On an older core build (platform byte 0x24, no bit7 handling) this title will not boot. *** -->
+	<name>Paca Paca Passion Special (Japan, PSP1/VER.A)</name>
+	<setname>pacappsp</setname>
+	<rbf>SYSTEM12</rbf>
+	<mameversion>0277</mameversion>
+	<year>1999</year>
+	<manufacturer>Produce / Namco</manufacturer>
+	<category>Rhythm</category>
+	<platform>Namco System 12</platform>
+
+	<!-- ==== SDRAM layout (see SYSTEM12.sv "ROM DETECT") ====
+	     0x0000000  Main RAM      4 MB  (COH-700)
+	     0x0400000  Program ROM   4 MB   ioctl 0 -> CPU 0x1FC00000 (boots directly, no BIOS)
+	     0x0800000  Banked ROM   24 MB  ioctl 3 -> DMA-5 source / CPU 2 MB window @0x1FA00000
+	     0x2800000  H8 program  512 KB   ioctl 6 -> H8/3002 external flash (S12_SPROG_START)
+	     0x2880000  C352 wave    16 MB  ioctl 7                        (S12_WAVE_START)
+	     top of image 0x3880000 (56.5 MB) - fits a 64 MB module.
+
+	     INPUT NOTE: MAME's pacapp port set puts the four coloured game buttons on the
+	     JVS *direction* bits, not the button bits:
+	       UP = Yellow, DOWN = Red, LEFT = Blue, RIGHT = Green
+	     so the primary way to play on MiSTer is the D-PAD / stick.
+	     MAME marks JVS BUTTON1-4 IPT_UNUSED but notes in-source that 'these work
+	     too', so the four <buttons> slots below are wired to BUTTON1-4 as a
+	     convenience (believed to mirror Yellow/Red/Blue/Green in that order).
+	     No new platform bit was invented - the stock 0x24 map is byte-correct.
+	-->
+
+	<!-- ioctl 0: main program, 2x 2 MB 16-bit interleaved (first MAME ROM_LOAD16_BYTE
+	     is at offset 0 = even/low byte = map "01", second is at offset 1 = map "10"). -->
+	<rom index="0" zip="pacappsp.zip" md5="none">
+		<interleave output="16">
+			<part name="psp1vera.2l" crc="4b6943af" map="01"/>
+			<part name="psp1vera.2p" crc="91397f04" map="10"/>
+		</interleave>
+	</rom>
+
+	<!-- ioctl 1: platform byte. bit5 = Namco System 12 (bit4 = System 11, must stay
+	     CLEAR). bit6 = Tekken-3 JAMMA button remap. bit7 = coh700b boot signature
+	     (copy 12 bytes from program ROM +0x20280 to main RAM 0x80010000 on every
+	     reset, as MAME's namcos12_state::driver_reset does when m_boot_hack is set).
+	     0xA4 = System 12, STOCK namcos12 JVS button map (bit6 clear), boot signature ON.
+	     Second byte = KEYCUS/protection id; System 12 has no emulated KEYCUS -> 0x00. -->
+	<rom index="1"><part>A4 00</part></rom>
+
+	<!-- ioctl 3: banked data ROM, 24 MB. Concatenated in MAME "bankedroms" region
+	     order; interleaved pairs only where MAME uses ROM_LOAD16_BYTE. -->
+	<rom index="3" zip="pacappsp.zip" md5="none">
+		<part name="psp1rom0.ic7" crc="7c26ff47"/>
+		<part name="psp1rom1.ic8" crc="4b764fc3"/>
+		<part name="psp1rom2.ic9" crc="a3fa6730"/>
+	</rom>
+
+	<!-- ioctl 6: H8/3002 sound program, 512 KB (external flash; the H8 is ROMless).
+	     MAME uses ROM_LOAD16_WORD_SWAP; the core handles the swap, ship it plain. -->
+	<rom index="6" zip="pacappsp.zip" md5="none">
+		<part name="psp1vera.11s" crc="47b9ccab"/>
+	</rom>
+
+	<!-- ioctl 7: C352 wave ROM, 16 MB. -->
+	<rom index="7" zip="pacappsp.zip" md5="none">
+		<part name="psp1wave0.ic2" crc="44b9a327"/>
+		<part name="psp1wave1.ic1" crc="c045b09c"/>
+	</rom>
+
+	<!-- ioctl 9: settings EEPROM, blank (all-FF). No proprietary nvram ships. -->
+	<rom index="9">
+		<part repeat="4096">FF</part>
+	</rom>
+
+	<buttons names="Yellow,Red,Blue,Green,-,-,Start,Coin" default="A,B,X,Y,,,Start,Select" count="4"/>
+</misterromdescription>
