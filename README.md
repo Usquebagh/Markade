@@ -53,6 +53,18 @@ When files are added, removed or updated in this repository, the Markade downloa
 
 Running `update_all.sh` will then pull the latest available versions onto your MiSTer.
 
+## ROM and LaserDisc Files
+
+Some cores require additional ROM files that are not included in this repository.
+Place any required MAME ROMs in:
+
+/games/mame/
+
+LaserDisc game files (.dlv) should be placed in:
+/games/laserdiscgames/
+
+Check the relevant core or MRA documentation for any game-specific file requirements.
+
 ## Credits
 
 The `.rbf` cores and `.mra` files contained here are the work of their respective developers, maintainers and contributors within the MiSTer community.
