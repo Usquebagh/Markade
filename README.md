@@ -47,23 +47,25 @@ or the standard MiSTer Downloader.
 
 Files will automatically be installed into their corresponding locations under `_Arcade`.
 
+## ROM and LaserDisc Files
+
+Some cores require additional ROM files that are not included in this repository.
+
+Place any required MAME ROMs in:
+
+`/games/mame/`
+
+LaserDisc game files (`.dlv`) should be placed in:
+
+`/games/laserdiscgames/`
+
+Check the relevant core or MRA documentation for any game-specific file requirements.
+
 ## Updates
 
 When files are added, removed or updated in this repository, the Markade downloader database is rebuilt automatically.
 
 Running `update_all.sh` will then pull the latest available versions onto your MiSTer.
-
-## ROM and LaserDisc Files
-
-Some cores require additional ROM files that are not included in this repository.
-Place any required MAME ROMs in:
-
-/games/mame/
-
-LaserDisc game files (.dlv) should be placed in:
-/games/laserdiscgames/
-
-Check the relevant core or MRA documentation for any game-specific file requirements.
 
 ## Credits
 
